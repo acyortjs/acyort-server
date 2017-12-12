@@ -1,0 +1,39 @@
+{
+  "name": "yes",
+  "version": "0.1.0",
+  "description": "Server module for AcyOrt",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/acyortjs/acyort-server.git"
+  },
+  "keywords": [
+    "acyort",
+    "server",
+    "liveReload",
+    "ws"
+  ],
+  "author": "LoeiFy@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/acyortjs/acyort-server/issues"
+  },
+  "homepage": "https://github.com/acyortjs/acyort-server#readme",
+  "devDependencies": {
+    "eslint": "^4.13.1",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.8.0",
+    "intelli-espower-loader": "^1.0.1",
+    "istanbul": "^0.4.5",
+    "mocha": "^4.0.1",
+    "power-assert": "^1.4.4"
+  },
+  "dependencies": {
+    "chokidar": "^1.7.0",
+    "mime": "^2.0.3",
+    "ws": "^3.3.2"
+  }
+}

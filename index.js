@@ -15,7 +15,7 @@ class SocketServer extends StaticServer {
     this.callback = fn
   }
 
-  start(port) {
+  start(port = '2222') {
     this.callback({ msg: 'Starting...' })
 
     const server = this.create(port)

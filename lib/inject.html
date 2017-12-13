@@ -6,7 +6,7 @@
     var ws = new WebSocket('ws://'+ location.host)
     ws.onmessage = function(e) {
       e = e.data
-      if (e === 'reload') {
+      if (e === 'html') {
         location.reload()
       }
       if (e === 'css') {
@@ -26,13 +26,15 @@
       }
     }
     ws.onopen = function(e) {
-      console.info('WebSocket connected')
+      console.info('Socket connected')
     }
     ws.onclose = function(e) {
       if (times <= 10) {
         times += 1
-        console.error('WebSocket closed, reconnecting...')
+        console.error('Socket closed, reconnecting...')
         setTimeout(socket, 5000)
+      } else {
+        console.info('Socket connect fail, Please refresh the browser')
       }
     }
   }

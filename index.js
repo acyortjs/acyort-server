@@ -8,6 +8,9 @@ class SocketServer extends StaticServer {
     super(base, dir)
     this.listen = pathFn.join(base, dir.listen)
     this.clients = []
+    this.server = null
+    this.ws = null
+    this.watcher = null
     this.callback = () => {}
   }
 
@@ -15,23 +18,27 @@ class SocketServer extends StaticServer {
     this.callback = fn
   }
 
+  close() {
+    this.watcher.close()
+    this.ws.close()
+    this.server.close()
+  }
+
   start(port = '2222') {
-    this.callback({ msg: 'Starting...' })
+    this.server = this.create(port)
+    this.watcher = watch(this.listen, { ignored: /(^|[/\\])\../, ignoreInitial: true })
+    this.ws = new Server({ server: this.server })
 
-    const server = this.create(port)
-    const watcher = watch(this.listen, { ignored: /(^|[/\\])\../, ignoreInitial: true })
-    const ws = new Server({ server })
-
-    ws.on('connection', (client) => {
+    this.ws.on('connection', (client) => {
       client.on('close', () => {
         this.clients = this.clients.filter(c => c !== client)
       })
       this.clients.push(client)
     })
 
-    watcher.on('all', (e, path) => this.callback({ e, path, clients: this.clients }))
+    this.watcher.on('all', (e, path) => this.callback({ e, path, clients: this.clients }))
 
-    this.callback({ msg: `Server running\n=> http://127.0.0.1:${port}/\nCTRL + C to shutdown` })
+    console.log(`Server running: http://127.0.0.1:${port}/\nCTRL + C to shutdown`)
   }
 }
 

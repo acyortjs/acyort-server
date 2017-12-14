@@ -38,6 +38,7 @@ class SocketServer extends StaticServer {
 
     this.watcher.on('all', (e, path) => this.callback({ e, path, clients: this.clients }))
 
+    // eslint-disable-next-line no-console
     console.log(`Server running: http://127.0.0.1:${port}/\nCTRL + C to shutdown`)
   }
 }

@@ -6,6 +6,7 @@
     var ws = new WebSocket('ws://'+ location.host)
     ws.onmessage = function(e) {
       e = e.data
+      console.log(e)
       if (e === 'html') {
         location.reload()
       }

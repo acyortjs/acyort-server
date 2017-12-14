@@ -1,6 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 const http = require('http')
+const puppeteer = require('puppeteer')
 const assert = require('power-assert')
 const sinon = require('sinon')
 const Server = require('../')
@@ -53,21 +54,28 @@ describe('server', () => {
   })
 
   it('file', async function() {
-    this.timeout(5000)
+    this.timeout(10000)
 
     const spy = sinon.spy(console, 'log')
+    const msgs = []
 
     server.start()
     assert(spy.calledWith('Server running: http://127.0.0.1:2222/\nCTRL + C to shutdown') === true)
 
-    await sleep(1000)
+    const browser = await puppeteer.launch()
+    const page = await browser.newPage()
+    await page.goto('http://127.0.0.1:2222')
+    page.on('console', ({ text }) => msgs.push(text))
 
     fs.writeFileSync(path.join(__dirname, 'listen', 'index.js'), '// index.js')
 
     await sleep(1000)
 
     assert(spy.calledWith('change') === true)
+    assert(msgs.length === 2)
+    assert(msgs[1] === path.join(__dirname, 'listen', 'index.js'))
 
+    await browser.close()
     spy.restore()
     server.close()
   })

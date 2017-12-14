@@ -1,5 +1,5 @@
 {
-  "name": "yes",
+  "name": "acyort-server",
   "version": "0.1.0",
   "description": "Server module for AcyOrt",
   "main": "index.js",

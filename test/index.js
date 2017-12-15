@@ -84,28 +84,17 @@ describe('server', () => {
     page.on('console', ({ text }) => msgs.push(text))
 
     fs.writeFileSync(path.join(__dirname, 'listen', 'index.js'), '// index.js')
-    await sleep(500)
+    await sleep(1000)
 
     assert(msgs.length === 2)
     assert(msgs[1] === path.join(__dirname, 'listen', 'index.js'))
 
-    msgs = []
-
-    fs.writeFileSync(path.join(__dirname, 'listen', 'index0.js'), '// index.js')
-    fs.unlinkSync(path.join(__dirname, 'listen', 'index.js'))
-    await sleep(500)
-
-    assert(msgs.length === 1)
-
-    fs.writeFileSync(path.join(__dirname, 'listen', 'index.js'), '// index.js')
-    fs.unlinkSync(path.join(__dirname, 'listen', 'index0.js'))
-
     server.removeListeners()
 
     fs.writeFileSync(path.join(__dirname, 'listen', 'index.js'), '// index.js')
-    await sleep(500)
+    await sleep(1000)
 
-    assert(msgs.length === 1)
+    assert(msgs.length === 2)
 
     await browser.close()
     server.close()

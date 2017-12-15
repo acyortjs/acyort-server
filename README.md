@@ -21,11 +21,18 @@ const server = new Server(__dirname, {
   public: 'public'    // server files path
 })
 
-server.action = ({ e, path, clients }) => {
+function listener({ e, path, clients }) => {
   console.log(e)      // file change event
   console.log(path)   // file path
   clients.forEach(client => client.send(path)) // send socket message to browsers
 }
 
+// add listener
+server.addListener(listener)
+
+// start server
 server.start()
+
+// remove all listeners
+server.removeListeners()
 ```

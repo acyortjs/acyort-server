@@ -7,15 +7,22 @@ class SocketServer extends StaticServer {
   constructor(base, dir) {
     super(base, dir)
     this.listen = pathFn.join(base, dir.listen)
+    this.timer = null
     this.clients = []
     this.server = null
     this.ws = null
     this.watcher = null
-    this.callback = () => {}
+    this.listeners = []
   }
 
-  set action(fn) {
-    this.callback = fn
+  addListener(fn) {
+    if (typeof fn === 'function') {
+      this.listeners.push(fn)
+    }
+  }
+
+  removeListeners() {
+    this.listeners = []
   }
 
   close() {
@@ -25,6 +32,11 @@ class SocketServer extends StaticServer {
   }
 
   start(port = '2222') {
+    if (this.server) {
+      // eslint-disable-next-line no-console
+      return console.log('The server is running...')
+    }
+
     this.server = this.create(port)
     this.watcher = watch(this.listen, { ignored: /(^|[/\\])\../, ignoreInitial: true })
     this.ws = new Server({ server: this.server })
@@ -36,10 +48,15 @@ class SocketServer extends StaticServer {
       this.clients.push(client)
     })
 
-    this.watcher.on('all', (e, path) => this.callback({ e, path, clients: this.clients }))
+    this.watcher.on('all', (e, path) => {
+      clearTimeout(this.timer)
+      this.timer = setTimeout(() => {
+        this.listeners.forEach(fn => fn({ e, path, clients: this.clients }))
+      })
+    })
 
     // eslint-disable-next-line no-console
-    console.log(`Server running: http://127.0.0.1:${port}/\nCTRL + C to shutdown`)
+    return console.log(`Server running: http://127.0.0.1:${port}/\nCTRL + C to shutdown`)
   }
 }
 

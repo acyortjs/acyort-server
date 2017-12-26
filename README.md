@@ -9,6 +9,9 @@ Server module for [AcyOrt](https://github.com/acyortjs/acyort)
 
 ```bash
 $ npm i acyort-server -S
+
+# cli
+$ npm i acyort-server -g
 ```
 
 ## Usage
@@ -36,3 +39,10 @@ server.start()
 // remove all listeners
 server.removeListeners()
 ```
+
+### cli
+
+```bash
+$ acyort-server [-p port]
+```
+

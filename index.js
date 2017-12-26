@@ -31,6 +31,10 @@ class SocketServer extends StaticServer {
     this.server.close()
   }
 
+  removeClient(client) {
+    this.clients = this.clients.filter(c => c !== client)
+  }
+
   start(port = '2222') {
     if (this.server) {
       // eslint-disable-next-line no-console
@@ -42,9 +46,8 @@ class SocketServer extends StaticServer {
     this.ws = new Server({ server: this.server })
 
     this.ws.on('connection', (client) => {
-      client.on('close', () => {
-        this.clients = this.clients.filter(c => c !== client)
-      })
+      client.on('close', () => this.removeClient(client))
+      client.on('error', () => this.removeClient(client))
       this.clients.push(client)
     })
 

@@ -17,27 +17,34 @@ $ npm i acyort-server -g
 ## Usage
 
 ```js
+const path = require('path')
 const Server = require('acyort-server')
 
-const server = new Server(__dirname, {
-  listen: 'listen',   // detect files path
-  public: 'public'    // server files path
+const server = new Server()
+
+const watchDir = __dirname
+const publicDir = __dirname
+
+server.init({
+  watchDir,                 // watch files path
+  publicDir,                // public static files path
 })
 
-function listener({ e, path, clients }) => {
-  console.log(e)      // file change event
-  console.log(path)   // file path
-  clients.forEach(client => client.send(path)) // send socket message to browsers
+function trigger({ e, path, clients }) => {
+  console.log(e)            // file change event
+  console.log(path)         // file path
+  clients.forEach(client => client.send(path)) // send socket message to clients
 }
 
-// add listener
-server.addListener(listener)
+// add trigger
+server.addTrigger(trigger)
 
 // start server
-server.start()
+server.start([port])        // default 2222
 
-// remove all listeners
-server.removeListeners()
+// remove all triggers
+server.removeTriggers()
+
 ```
 
 ### cli

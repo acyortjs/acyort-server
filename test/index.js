@@ -27,18 +27,20 @@ function get(path = '/') {
 describe('server', () => {
   it('static server', async function() {
     const spy = sinon.spy(console, 'log')
-    const server = new Server(__dirname, {
-      listen: 'listen',
-      public: 'public'
-    })
 
-    server.addListener(({ e, path, clients }) => {
+    const watchDir = path.join(__dirname, 'watch')
+    const publicDir = path.join(__dirname, 'public')
+    const server = new Server()
+
+    server.init({ watchDir, publicDir })
+
+    server.addTrigger(({ e, path, clients }) => {
       console.log(e)
     })
 
-    server.addListener('no a function')
+    server.addTrigger('no a function')
 
-    assert(server.listeners.length === 1)
+    assert(server.triggers.length === 1)
 
     server.start()
     assert(spy.calledWith('Server running: http://127.0.0.1:2222/\nCTRL + C to shutdown') === true)
@@ -58,8 +60,12 @@ describe('server', () => {
     server.start()
     assert(spy.calledWith('The server is running...') === true)
 
-    spy.restore()
     server.close()
+
+    server.start()
+    assert(spy.calledWith('Error, please initialize the directories') === true)
+
+    spy.restore()
   })
 
   it('socket server', async function() {
@@ -67,12 +73,13 @@ describe('server', () => {
 
     let msgs = []
 
-    const server = new Server(__dirname, {
-      listen: 'listen',
-      public: 'public'
-    })
+    const watchDir = path.join(__dirname, 'watch')
+    const publicDir = path.join(__dirname, 'public')
+    const server = new Server()
 
-    server.addListener(({ e, path, clients }) => {
+    server.init({ watchDir, publicDir })
+
+    server.addTrigger(({ e, path, clients }) => {
       clients.forEach(client => client.send(path))
     })
 
@@ -83,15 +90,15 @@ describe('server', () => {
     await page.goto('http://127.0.0.1:2222')
     page.on('console', ({ text }) => msgs.push(text))
 
-    fs.writeFileSync(path.join(__dirname, 'listen', 'index.js'), '// index.js')
+    fs.writeFileSync(path.join(__dirname, 'watch', 'index.js'), '// index.js')
     await sleep(1000)
 
     assert(msgs.length === 2)
-    assert(msgs[1] === path.join(__dirname, 'listen', 'index.js'))
+    assert(msgs[1] === path.join(__dirname, 'watch', 'index.js'))
 
-    server.removeListeners()
+    server.removeTriggers()
 
-    fs.writeFileSync(path.join(__dirname, 'listen', 'index.js'), '// index.js')
+    fs.writeFileSync(path.join(__dirname, 'watch', 'index.js'), '// index.js')
     await sleep(1000)
 
     assert(msgs.length === 2)

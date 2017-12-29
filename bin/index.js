@@ -6,14 +6,17 @@ const Server = require('../')
 
 const argv = minimist(process.argv.slice(2))
 const port = argv.p || 2333
+const cwd = process.cwd()
+const watchDir = cwd
+const publicDir = cwd
+const server = new Server()
 
-const server = new Server(process.cwd(), {
-  listen: '/',
-  public: '/'
-})
+server.init({ watchDir, publicDir })
 
-server.addListener(({ e, path, clients }) => {
-  console.log(path)
+server.addTrigger(({ e, path, clients }) => {
+  // eslint-disable-next-line no-console
+  console.log(e, path)
+
   const ext = pathFn.extname(path)
   const msg = ext === '.css' ? 'css' : 'html'
   clients.forEach(client => client.send(msg))

@@ -28,21 +28,15 @@ describe('server', () => {
   it('static server', async function() {
     const spy = sinon.spy(console, 'log')
 
-    const watchDir = path.join(__dirname, 'watch')
-    const publicDir = path.join(__dirname, 'public')
+    const watches = path.join(__dirname, 'watches')
+    const publics = path.join(__dirname, 'publics')
     const server = new Server()
 
-    server.init({ watchDir, publicDir })
-
-    server.addTrigger(({ e, path, clients }) => {
+    server.trigger = ({ e, path, clients }) => {
       console.log(e)
-    })
+    }
 
-    server.addTrigger('no a function')
-
-    assert(server.triggers.length === 1)
-
-    server.start()
+    server.start({ watches, publics })
     assert(spy.calledWith('Server running: http://127.0.0.1:2222/\nCTRL + C to shutdown') === true)
 
     let code = await get()
@@ -57,13 +51,14 @@ describe('server', () => {
     code = await get('/ss')
     assert(code === 404)
 
-    server.start()
+    server.start({ watches, publics })
     assert(spy.calledWith('The server is running...') === true)
 
     server.close()
 
-    server.start()
-    assert(spy.calledWith('Error, please initialize the directories') === true)
+    server.trigger = 'no a function'
+
+    assert(server.callback('args') === undefined)
 
     spy.restore()
   })
@@ -71,37 +66,30 @@ describe('server', () => {
   it('socket server', async function() {
     this.timeout(10000)
 
-    let msgs = []
+    const msgs = []
 
-    const watchDir = path.join(__dirname, 'watch')
-    const publicDir = path.join(__dirname, 'public')
+    const watches = path.join(__dirname, 'watches')
+    const publics = path.join(__dirname, 'publics')
     const server = new Server()
 
-    server.init({ watchDir, publicDir })
-
-    server.addTrigger(({ e, path, clients }) => {
+    server.trigger = ({ e, path, clients }) => {
       clients.forEach(client => client.send(path))
-    })
+    }
 
-    server.start()
+    server.start({ watches, publics })
 
     const browser = await puppeteer.launch()
     const page = await browser.newPage()
     await page.goto('http://127.0.0.1:2222')
     page.on('console', ({ text }) => msgs.push(text))
 
-    fs.writeFileSync(path.join(__dirname, 'watch', 'index.js'), '// index.js')
+    await sleep(1000)
+
+    fs.writeFileSync(path.join(__dirname, 'watches', 'index.html'), 'index.html')
     await sleep(1000)
 
     assert(msgs.length === 2)
-    assert(msgs[1] === path.join(__dirname, 'watch', 'index.js'))
-
-    server.removeTriggers()
-
-    fs.writeFileSync(path.join(__dirname, 'watch', 'index.js'), '// index.js')
-    await sleep(1000)
-
-    assert(msgs.length === 2)
+    assert(msgs[1] === path.join(__dirname, 'watches', 'index.html'))
 
     await browser.close()
     server.close()

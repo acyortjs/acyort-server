@@ -14,32 +14,13 @@ class SocketServer extends StaticServer {
     this.server = null
     this.ws = null
     this.watcher = null
-    this.triggers = []
+    this.callback = () => {}
   }
 
-  addTrigger(fn) {
+  set trigger(fn) {
     if (typeof fn === 'function') {
-      this.triggers.push(fn)
+      this.callback = fn
     }
-  }
-
-  removeTriggers() {
-    this.triggers = []
-  }
-
-  init({ watchDir, publicDir }) {
-    this.public = publicDir
-    this.watcher = watch(watchDir, {
-      ignored: /(^|[/\\])\../,
-      ignoreInitial: true,
-    })
-
-    this.watcher.on('all', (e, path) => {
-      clearTimeout(this.timer)
-      this.timer = setTimeout(() => {
-        this.triggers.forEach(fn => fn({ e, path, clients: this.clients }))
-      })
-    })
   }
 
   close() {
@@ -53,16 +34,21 @@ class SocketServer extends StaticServer {
     this.clients = this.clients.filter(c => c !== client)
   }
 
-  start(port = '2222') {
+  start({ port = '2222', watches, publics }) {
     if (this.server) {
       // eslint-disable-next-line no-console
       return console.log('The server is running...')
     }
 
-    if (!this.watcher) {
-      // eslint-disable-next-line no-console
-      return console.log('Error, please initialize the directories')
-    }
+    this.public = publics
+
+    this.watcher = watch(watches, { ignored: /(^|[/\\])\../, ignoreInitial: true })
+    this.watcher.on('all', (e, path) => {
+      clearTimeout(this.timer)
+      this.timer = setTimeout(() => {
+        this.callback({ e, path, clients: this.clients })
+      })
+    })
 
     this.server = this.create(port)
     this.ws = new Server({ server: this.server })

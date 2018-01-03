@@ -20,10 +20,13 @@ $ npm i acyort-server -g
 const path = require('path')
 const Server = require('acyort-server')
 
-const server = new Server()
-
 const watches = __dirname
 const publics = __dirname
+
+const server = new Server({
+  watches,                  // watch files path
+  publics,                  // public static files path
+})
 
 server.trigger = ({ e, path, clients }) => {
   console.log(e)            // file change event
@@ -32,17 +35,15 @@ server.trigger = ({ e, path, clients }) => {
 }
 
 // start server
-server.start({
-  [port: 2333]              // default: 2222
-  watches,                  // watch files path
-  publics,                  // public static files path
-})
-
+server.start([port])        // default: 2222
 ```
 
-### cli
+## Cli
 
 ```bash
 $ acyort-server [-p port]
+
+# or
+$ as [-p port]
 ```
 

@@ -3,8 +3,9 @@ const { Server } = require('ws')
 const StaticServer = require('./lib/server')
 
 class SocketServer extends StaticServer {
-  constructor() {
-    super()
+  constructor({ watches, publics }) {
+    super(publics)
+    this.watches = watches
     this.initialize()
   }
 
@@ -14,7 +15,7 @@ class SocketServer extends StaticServer {
     this.server = null
     this.ws = null
     this.watcher = null
-    this.callback = () => {}
+    this.callback = () => null
   }
 
   set trigger(fn) {
@@ -34,15 +35,8 @@ class SocketServer extends StaticServer {
     this.clients = this.clients.filter(c => c !== client)
   }
 
-  start({ port = '2222', watches, publics }) {
-    if (this.server) {
-      // eslint-disable-next-line no-console
-      return console.log('The server is running...')
-    }
-
-    this.public = publics
-
-    this.watcher = watch(watches, { ignored: /(^|[/\\])\../, ignoreInitial: true })
+  start(port = '2222') {
+    this.watcher = watch(this.watches, { ignored: /(^|[/\\])\../, ignoreInitial: true })
     this.watcher.on('all', (e, path) => {
       clearTimeout(this.timer)
       this.timer = setTimeout(() => {

@@ -9,7 +9,7 @@ const port = argv.p || 2333
 const cwd = process.cwd()
 const watches = cwd
 const publics = cwd
-const server = new Server()
+const server = new Server({ watches, publics })
 
 server.trigger = ({ e, path, clients }) => {
   // eslint-disable-next-line no-console
@@ -20,4 +20,4 @@ server.trigger = ({ e, path, clients }) => {
   clients.forEach(client => client.send(msg))
 }
 
-server.start({ port, watches, publics })
+server.start(port)

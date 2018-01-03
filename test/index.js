@@ -30,13 +30,13 @@ describe('server', () => {
 
     const watches = path.join(__dirname, 'watches')
     const publics = path.join(__dirname, 'publics')
-    const server = new Server()
+    const server = new Server({ watches, publics })
 
     server.trigger = ({ e, path, clients }) => {
       console.log(e)
     }
 
-    server.start({ watches, publics })
+    server.start()
     assert(spy.calledWith('Server running: http://127.0.0.1:2222/\nCTRL + C to shutdown') === true)
 
     let code = await get()
@@ -51,14 +51,10 @@ describe('server', () => {
     code = await get('/ss')
     assert(code === 404)
 
-    server.start({ watches, publics })
-    assert(spy.calledWith('The server is running...') === true)
-
     server.close()
 
     server.trigger = 'no a function'
-
-    assert(server.callback('args') === undefined)
+    assert(server.callback() === null)
 
     spy.restore()
   })
@@ -70,13 +66,13 @@ describe('server', () => {
 
     const watches = path.join(__dirname, 'watches')
     const publics = path.join(__dirname, 'publics')
-    const server = new Server()
+    const server = new Server({ watches, publics })
 
     server.trigger = ({ e, path, clients }) => {
       clients.forEach(client => client.send(path))
     }
 
-    server.start({ watches, publics })
+    server.start()
 
     const browser = await puppeteer.launch()
     const page = await browser.newPage()

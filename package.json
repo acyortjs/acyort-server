@@ -1,11 +1,10 @@
 {
   "name": "acyort-server",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "AcyOrt server",
   "main": "index.js",
   "bin": {
-    "acyort-server": "./bin/index.js",
-    "as": "./bin/index.js"
+    "acyort-server": "./bin/index.js"
   },
   "scripts": {
     "test": "npm run test:lint && npm run test:cover",

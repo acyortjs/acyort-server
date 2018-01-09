@@ -11,13 +11,13 @@ const watches = cwd
 const publics = cwd
 const server = new Server({ watches, publics })
 
-server.trigger = ({ e, path, clients }) => {
+server.addTrigger(({ e, path, clients }) => {
   // eslint-disable-next-line no-console
   console.log(e, path)
 
   const ext = pathFn.extname(path)
   const msg = ext === '.css' ? 'css' : 'html'
   clients.forEach(client => client.send(msg))
-}
+})
 
 server.start(port)

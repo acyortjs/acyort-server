@@ -28,17 +28,17 @@ const server = new Server({
   publics,                    // public static files path
 })
 
-server.addTrigger(({ e, path, clients }) => {
+server.trigger = ({ e, path, clients }) => {
   console.log(e)              // file change event
   console.log(path)           // file path
   clients.forEach(client => client.send(path)) // send socket message to clients
-})
+}
 
 // start server
 server.start([port])          // default: 2222
 
 // get status
-console.log(server.running)   // true
+console.log(server.status)    // { e, path }
 ```
 
 ## Cli

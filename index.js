@@ -15,17 +15,18 @@ class SocketServer extends StaticServer {
     this.server = null
     this.ws = null
     this.watcher = null
-    this.triggers = []
+    this.callback = () => null
+    this.current = null
   }
 
-  addTrigger(fn) {
+  set trigger(fn) {
     if (typeof fn === 'function') {
-      this.triggers.push(fn)
+      this.callback = fn
     }
   }
 
-  get running() {
-    return !!this.server
+  get status() {
+    return this.current
   }
 
   close() {
@@ -44,7 +45,8 @@ class SocketServer extends StaticServer {
     this.watcher.on('all', (e, path) => {
       clearTimeout(this.timer)
       this.timer = setTimeout(() => {
-        this.triggers.forEach(trigger => trigger({ e, path, clients: this.clients }))
+        this.current = { e, path }
+        this.callback({ e, path, clients: this.clients })
       })
     })
 

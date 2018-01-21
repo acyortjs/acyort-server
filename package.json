@@ -1,6 +1,6 @@
 {
   "name": "acyort-server",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "AcyOrt server",
   "main": "index.js",
   "bin": {
@@ -40,6 +40,7 @@
     "sinon": "^4.1.3"
   },
   "dependencies": {
+    "acyort-logger": "^0.1.0",
     "chokidar": "^1.7.0",
     "mime": "^2.0.3",
     "minimist": "^1.2.0",

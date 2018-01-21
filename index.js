@@ -1,11 +1,13 @@
 const { watch } = require('chokidar')
 const { Server } = require('ws')
+const Logger = require('acyort-logger')
 const StaticServer = require('./lib/server')
 
 class SocketServer extends StaticServer {
   constructor({ watches, publics }) {
     super(publics)
     this.watches = watches
+    this.logger = new Logger()
     this.initialize()
   }
 
@@ -41,6 +43,10 @@ class SocketServer extends StaticServer {
   }
 
   start(port = '2222') {
+    if (this.server) {
+      return this.logger.info('The server is running...')
+    }
+
     this.watcher = watch(this.watches, { ignored: /(^|[/\\])\../, ignoreInitial: true })
     this.watcher.on('all', (e, path) => {
       clearTimeout(this.timer)
@@ -59,8 +65,7 @@ class SocketServer extends StaticServer {
       this.clients.push(client)
     })
 
-    // eslint-disable-next-line no-console
-    return console.log(`Server running: http://127.0.0.1:${port}/\nCTRL + C to shutdown`)
+    return this.logger.info(`Server running: http://127.0.0.1:${port}/\n  CTRL + C to shutdown`)
   }
 }
 

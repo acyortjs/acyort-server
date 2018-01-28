@@ -37,6 +37,9 @@ server.trigger = ({ e, path, clients }) => {
 // start server
 server.start([port])          // default: 2222
 
+// server is running
+console.log(server.running)   // true
+
 // get status
 console.log(server.status)    // { e, path }
 ```

@@ -42,12 +42,12 @@ class SocketServer extends StaticServer {
     this.clients = this.clients.filter(c => c !== client)
   }
 
-  running() {
+  get running() {
     return !!this.server
   }
 
   start(port = '2222') {
-    if (this.running()) {
+    if (this.running) {
       return this.logger.info('The server is running...')
     }
 

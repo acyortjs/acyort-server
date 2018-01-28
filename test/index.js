@@ -54,7 +54,7 @@ describe('server', () => {
     server.start()
     assert(spy.calledWith('The server is running...') === true)
 
-    assert(server.running() === true)
+    assert(server.running === true)
 
     server.close()
     spy.restore()

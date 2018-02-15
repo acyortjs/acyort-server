@@ -54,10 +54,8 @@ describe('server', () => {
     server.start()
     assert(spy.calledWith('The server is running...') === true)
 
-    assert(server.running === true)
-
     server.close()
-    spy.restore()
+    assert(server.status.running === false)
   })
 
   it('socket server', async function() {
@@ -69,7 +67,7 @@ describe('server', () => {
     const publics = path.join(__dirname, 'publics')
     const server = new Server({ watches, publics })
 
-    server.trigger = ({ e, path, clients }) => {
+    server.trigger = ({ event, path, clients }) => {
       clients.forEach(client => client.send(path))
     }
 
@@ -85,7 +83,7 @@ describe('server', () => {
     fs.writeFileSync(path.join(__dirname, 'watches', 'index.html'), 'index.html')
     await sleep(1000)
 
-    assert(server.status.e === 'change')
+    assert(server.status.event === 'change')
     assert(server.status.path === path.join(__dirname, 'watches', 'index.html'))
     assert(msgs.length === 2)
     assert(msgs[1] === path.join(__dirname, 'watches', 'index.html'))

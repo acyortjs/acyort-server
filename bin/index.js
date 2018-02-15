@@ -11,9 +11,9 @@ const watches = cwd
 const publics = cwd
 const server = new Server({ watches, publics })
 
-server.trigger = ({ e, path, clients }) => {
+server.trigger = ({ event, path, clients }) => {
   // eslint-disable-next-line no-console
-  console.log(e, path)
+  console.log(event, path)
 
   const ext = pathFn.extname(path)
   const msg = ext === '.css' ? 'css' : 'html'

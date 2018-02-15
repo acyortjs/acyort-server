@@ -28,7 +28,7 @@ class SocketServer extends StaticServer {
   }
 
   get status() {
-    return this.current
+    return Object.assign(this.current || {}, { running: !!this.server })
   }
 
   close() {
@@ -42,21 +42,17 @@ class SocketServer extends StaticServer {
     this.clients = this.clients.filter(c => c !== client)
   }
 
-  get running() {
-    return !!this.server
-  }
-
   start(port = '2222') {
-    if (this.running) {
+    if (this.server) {
       return this.logger.info('The server is running...')
     }
 
     this.watcher = watch(this.watches, { ignored: /(^|[/\\])\../, ignoreInitial: true })
-    this.watcher.on('all', (e, path) => {
+    this.watcher.on('all', (event, path) => {
       clearTimeout(this.timer)
       this.timer = setTimeout(() => {
-        this.current = { e, path }
-        this.callback({ e, path, clients: this.clients })
+        this.current = { event, path }
+        this.callback({ event, path, clients: this.clients })
       })
     })
 

@@ -26,10 +26,11 @@
   },
   "homepage": "https://github.com/acyortjs/acyort-server#readme",
   "devDependencies": {
-    "eslint": "*",
-    "eslint-config-airbnb-base": "*",
-    "eslint-plugin-import": "*"
+    "eslint": "^5.9.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0"
   },
   "dependencies": {
+    "pavane": "^0.1.5"
   }
 }

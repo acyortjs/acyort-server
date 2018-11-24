@@ -1,0 +1,24 @@
+# url of website. format like http://<domain>/<path> or https://<domain>
+url:
+
+# website template
+template: ccc45
+
+# scripts, script file name
+scripts:
+  - script.js
+  - server.js
+
+# plugins, npm modules
+plugins:
+  # - xxx module
+
+# output, where static site files located
+public: /
+
+# timezone, website timezone. use machine setting by default
+# example: `America/New_York`, `Japan`, `UTC`, or `Asia/Shanghai`
+timezone:
+
+# language of website
+language: en

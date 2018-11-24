@@ -12,6 +12,9 @@ module.exports = (acyort) => {
     fullName: 'server',
     description: 'LiveReload Server',
     action: async (argv, _acyort) => {
+      const { _ = [] } = argv
+      const port = Number(_[1]) || 2222
+
       server.listener = async (args) => {
         const {
           event,
@@ -38,7 +41,7 @@ module.exports = (acyort) => {
       }
 
       await _acyort.process()
-      server.start(2222)
+      server.start(port)
     },
   })
 }

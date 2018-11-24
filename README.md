@@ -1,6 +1,6 @@
 # acyort-server
 
-AcyOrt plugin liveReload server
+AcyOrt LiveReload server plugin
 
 ## Install
 
@@ -9,3 +9,18 @@ $ npm i acyort-server -S
 ```
 
 ## Usage
+
+add `acyort-server` to `config.yml`
+
+```yml
+# plugins, npm modules
+plugins:
+  - acyort-server
+```
+
+use
+
+```bash
+# default port 2222
+$ acyort server [port]
+```

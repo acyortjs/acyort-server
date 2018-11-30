@@ -24,3 +24,18 @@ use
 # default port 2222
 $ acyort server [port]
 ```
+
+## Test
+
+install AcyOrt
+
+```bash
+$ npm i acyort -g
+```
+
+test
+
+```bash
+$ cd test
+$ acyort server [port]
+```

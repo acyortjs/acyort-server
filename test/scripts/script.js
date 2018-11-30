@@ -12,7 +12,7 @@ module.exports = (acyort) => {
     acyort.copySource()
   }
 
-  acyort.store.set('key', 5)
+  acyort.store.set('key', 10)
 
   acyort.workflow.register(d)
 

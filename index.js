@@ -11,7 +11,7 @@ module.exports = (acyort) => {
     name: 'server',
     fullName: 'server',
     description: 'LiveReload Server',
-    action: async (argv, _acyort) => {
+    action: async function action(argv) {
       const { _ = [] } = argv
       const port = Number(_[1]) || 2222
 
@@ -25,16 +25,16 @@ module.exports = (acyort) => {
         } = args
 
         if (event === 'info') {
-          _acyort.logger.info(message)
+          this.logger.info(message)
           return
         }
 
-        _acyort.logger.info(`${event}: ${path.split(`${base}/templates/`)[1]}`)
+        this.logger.info(`${event}: ${path.split(`${base}/templates/`)[1]}`)
 
-        _acyort.store.reset()
-        _acyort.store.set('server_status', { event, path })
+        this.store.reset()
+        this.store.set('server_status', { event, path })
 
-        await _acyort.process()
+        await this.process()
 
         if (extname(path) === '.css') {
           reloadCss()
@@ -43,7 +43,7 @@ module.exports = (acyort) => {
         }
       }
 
-      await _acyort.process()
+      await this.process()
       server.start(port)
     },
   })

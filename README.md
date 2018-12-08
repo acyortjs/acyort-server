@@ -25,7 +25,9 @@ use
 $ acyort server [port]
 ```
 
-get current server status
+it will listen `templates` files change, and reload page or css
+
+> you get server status
 
 ```js
 // on AcyOrt workflow

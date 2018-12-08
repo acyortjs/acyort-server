@@ -1,12 +1,12 @@
 const { join, extname } = require('path')
 const Pavane = require('pavane')
 
-const base = process.cwd()
-const watches = join(base, 'templates')
-const publics = base
-const server = new Pavane(watches, publics)
-
 module.exports = (acyort) => {
+  const { base, public: publicDir, template } = acyort.config
+  const watches = join(base, 'templates', template)
+  const publics = join(base, publicDir)
+  const server = new Pavane(watches, publics)
+
   acyort.cli.register('commands', {
     name: 'server',
     fullName: 'server',

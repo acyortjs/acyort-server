@@ -1,5 +1,6 @@
 module.exports = (acyort) => {
   function d() {
+    acyort.store.set('key', 10)
     acyort.outputHTML({
       template: 'index',
       path: 'index.html',
@@ -11,8 +12,6 @@ module.exports = (acyort) => {
     })
     acyort.copySource()
   }
-
-  acyort.store.set('key', 10)
 
   acyort.workflow.register(d)
 

@@ -31,6 +31,9 @@ module.exports = (acyort) => {
 
         _acyort.logger.info(`${event}: ${path.split(`${base}/templates/`)[1]}`)
 
+        _acyort.store.reset()
+        _acyort.store.set('server_status', { event, path })
+
         await _acyort.process()
 
         if (extname(path) === '.css') {

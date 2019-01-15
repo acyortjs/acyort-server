@@ -25,14 +25,14 @@ module.exports = (acyort) => {
         } = args
 
         if (event === 'info') {
-          this.logger.info(message)
+          acyort.logger.info(message)
           return
         }
 
-        this.logger.info(`${event}: ${path.split(`${base}/templates/`)[1]}`)
+        acyort.logger.info(`${event}: ${path.split(`${base}/templates/`)[1]}`)
 
-        this.store.reset()
-        this.store.set('server_status', { event, path })
+        acyort.store.reset()
+        acyort.store.set('status', { event, path })
 
         await this.process()
 
@@ -43,6 +43,7 @@ module.exports = (acyort) => {
         }
       }
 
+      acyort.store.set('status', { event: 'Starting server' })
       await this.process()
       server.start(port)
     },

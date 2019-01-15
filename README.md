@@ -27,14 +27,13 @@ $ acyort server [port]
 
 it will listen `templates` files change, and reload page or css
 
-> you get server status
+> get server status
 
 ```js
 // on AcyOrt workflow
 module.exports = (acyort) => {
   acyort.workflow.register(function () {
-    // store key is `server_status`
-    console.log(acyort.store.get('server_statue'))
+    console.log(acyort.store.get('status', 'acyort-server'))
     /*
       {
         path: '...',

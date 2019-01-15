@@ -11,6 +11,7 @@ module.exports = (acyort) => {
       },
     })
     acyort.copySource()
+    console.log(acyort.store.get('status', 'server.js'))
   }
 
   acyort.workflow.register(d)

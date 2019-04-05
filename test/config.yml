@@ -4,14 +4,10 @@ url:
 # website template
 template: ccc45
 
-# scripts, script file name
-scripts:
-  - script.js
-  - server.js
-
 # plugins, npm modules
 plugins:
-  # - xxx module
+  - script.js
+  - server.js
 
 # output, where static site files located
 public: public

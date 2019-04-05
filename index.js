@@ -13,39 +13,42 @@ module.exports = (acyort) => {
     description: 'LiveReload Server',
     action: async function action(argv) {
       const { _ = [] } = argv
-      const port = Number(_[1]) || 2222
+      const p = Number(_[1]) || 2222
 
-      server.listener = async (args) => {
+      server.subscribe = async (args) => {
         const {
           event,
           path,
-          message,
-          reloadCss,
-          reloadPage,
+          port,
+          trigger,
+          status,
         } = args
 
-        if (event === 'info') {
-          acyort.logger.info(message)
+        if (status === 'start') {
+          acyort.logger.info(`Server running: http://127.0.0.1:${port}\n  CTRL + C to shutdown`)
           return
         }
 
-        acyort.logger.info(`${event}: ${path.split(`${base}/templates/`)[1]}`)
+        if (event) {
+          acyort.store.reset()
+          acyort.store.set('status', { event, path })
 
-        acyort.store.reset()
-        acyort.store.set('status', { event, path })
+          await this.process()
 
-        await this.process()
-
-        if (extname(path) === '.css') {
-          reloadCss()
-        } else {
-          reloadPage()
+          if (extname(path) === '.css') {
+            trigger('css')
+          } else {
+            trigger('page')
+          }
+          acyort.logger.info(`${event}: ${path.split(`${base}/templates/`)[1]}`)
         }
       }
 
-      acyort.store.set('status', { event: 'Starting server' })
+      acyort.store.set('status', { event: 'starting' })
+
       await this.process()
-      server.start(port)
+
+      server.start(p)
     },
   })
 }

@@ -1,6 +1,6 @@
 # acyort-server
 
-AcyOrt LiveReload server plugin
+LiveReload Server for AcyOrt
 
 ## Install
 
@@ -46,15 +46,13 @@ module.exports = (acyort) => {
 
 ## Test
 
-install AcyOrt
-
 ```bash
+# install AcyOrt
 $ npm i acyort -g
-```
 
-test
+# install packages
+$ npm i
 
-```bash
-$ cd test
-$ acyort server [port]
+# start
+$ npm start
 ```

@@ -1,7 +1,7 @@
 {
   "name": "acyort-server",
   "version": "2.2.0",
-  "description": "AcyOrt LiveReload server plugin",
+  "description": "LiveReload Server for AcyOrt",
   "main": "index.js",
   "files": [
     "index.js"

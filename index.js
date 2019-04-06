@@ -30,7 +30,6 @@ module.exports = (acyort) => {
         }
 
         if (event) {
-          acyort.store.reset()
           acyort.store.set('status', { event, path })
 
           await this.process()

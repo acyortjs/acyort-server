@@ -1,7 +1,7 @@
 module.exports = (acyort) => {
   function d() {
     acyort.store.set('key', 10)
-    acyort.outputHTML({
+    acyort.util.outputHTML({
       template: 'index',
       path: 'index.html',
       data: {
@@ -10,7 +10,7 @@ module.exports = (acyort) => {
         other: 10,
       },
     })
-    acyort.copySource()
+    acyort.util.copySource()
     global.console.log(acyort.store.get('status', 'server.js'))
   }
 

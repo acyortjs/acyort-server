@@ -25,29 +25,37 @@ module.exports = (acyort) => {
         } = args
 
         if (status === 'start') {
-          acyort.logger.info(`Server running: http://127.0.0.1:${port}\n  CTRL + C to shutdown`)
+          acyort.logger.log(`Server running: http://127.0.0.1:${port}\n  CTRL + C to shutdown`)
           return
         }
 
         if (event) {
+          acyort.logger.info(`${event}: ${path.split(`${base}/templates/`)[1]}`)
           acyort.store.set('status', { event, path })
 
-          await this.process()
+          try {
+            await this.process()
+          } catch (e) {
+            acyort.logger.error(e)
+            return
+          }
 
           if (extname(path) === '.css') {
             trigger('css')
           } else {
             trigger('page')
           }
-          acyort.logger.info(`${event}: ${path.split(`${base}/templates/`)[1]}`)
         }
       }
 
       acyort.store.set('status', { event: 'starting' })
 
-      await this.process()
-
-      server.start(p)
+      try {
+        await this.process()
+        server.start(p)
+      } catch (e) {
+        acyort.logger.error(e)
+      }
     },
   })
 }

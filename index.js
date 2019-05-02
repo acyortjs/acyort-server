@@ -2,7 +2,7 @@ const { join, extname } = require('path')
 const Pavane = require('pavane')
 
 module.exports = (acyort) => {
-  const { base, public: publicDir, template } = acyort.config
+  const { base, public: publicDir, template } = acyort.config.get()
   const watches = join(base, 'templates', template)
   const publics = join(base, publicDir)
   const server = new Pavane(watches, publics)
@@ -12,8 +12,7 @@ module.exports = (acyort) => {
     fullName: 'server',
     description: 'LiveReload Server',
     action: async function action(argv) {
-      const { _ = [] } = argv
-      const p = Number(_[1]) || 2222
+      const p = Number(argv.p) || 2222
 
       server.subscribe = async (args) => {
         const {
@@ -34,7 +33,7 @@ module.exports = (acyort) => {
           acyort.store.set('status', { event, path })
 
           try {
-            await this.process()
+            await this.workflow.start()
           } catch (e) {
             acyort.logger.error(e)
             return
@@ -51,7 +50,7 @@ module.exports = (acyort) => {
       acyort.store.set('status', { event: 'starting' })
 
       try {
-        await this.process()
+        await this.workflow.start()
         server.start(p)
       } catch (e) {
         acyort.logger.error(e)

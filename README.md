@@ -22,7 +22,10 @@ use
 
 ```bash
 # default port 2222
-$ acyort server [port]
+$ acyort server
+
+# custom port
+$ acyort server -p 2222
 ```
 
 it will listen `templates` files change, and reload page or css
